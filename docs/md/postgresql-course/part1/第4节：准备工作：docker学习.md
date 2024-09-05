@@ -894,7 +894,7 @@ CONTAINER ID   IMAGE     COMMAND                  CREATED         STATUS        
 查看你所有容器（包括未运行的）
 
 ```
-<span></span><code>root@docker01 ~]<span># docker ps -a</span><br>CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                      PORTS               NAMES<br><span>8708e93</span>fd767        nginx               <span>"nginx -g 'daemon of…"</span><span>4</span><span>minutes ago       <span>Exited</span> <span>(<span>0</span>)</span> 59 seconds ago                       keen_lewin<br>f9f3e6af7508        nginx               "nginx -g 'daemon of…"   5 minutes ago       <span>Exited</span> <span>(<span>0</span>)</span> 5 minutes ago                        optimistic_haibt<br>8d8f81da12b5        nginx               "nginx -g 'daemon of…"   3 hours ago         <span>Exited</span> <span>(<span>0</span>)</span> 3 hours ago                          lucid_bohr<br></span></code>
+root@docker01 ~]# docker ps -aCONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                      PORTS               NAMES8708e93fd767        nginx               "nginx -g 'daemon of…"4minutes ago       Exited (0) 59 seconds ago                       keen_lewinf9f3e6af7508        nginx               "nginx -g 'daemon of…"   5 minutes ago       Exited (0) 5 minutes ago                        optimistic_haibt8d8f81da12b5        nginx               "nginx -g 'daemon of…"   3 hours ago         Exited (0) 3 hours ago                          lucid_bohr
 ```
 
 停止容器
@@ -1008,7 +1008,7 @@ root         43     29  0 15:32 pts/1    00:00:00 ps -ef
 随机映射
 
 ```
-<span></span><code>docker run -P （大P）<span># 需要镜像支持</span><br></code>
+docker run -P （大P）# 需要镜像支持
 ```
 
 ## 6 Docker 数据卷的管理
@@ -1018,7 +1018,7 @@ root         43     29  0 15:32 pts/1    00:00:00 ps -ef
 挂载卷
 
 ```
-<span></span><code>[root@docker01 ~]<span># docker run -d -p 80:80 -v /data:/usr/share/nginx/html nginx:latest</span><br><span>079786</span>c1e297b5c5031e7a841160c74e91d4ad06516505043c60dbb78a259d09<br></code>
+ docker run -d -p 80:80 -v /data:/usr/share/nginx/html nginx:latest
 ```
 
 容器内站点目录: /usr/share/nginx/html
@@ -1026,19 +1026,24 @@ root         43     29  0 15:32 pts/1    00:00:00 ps -ef
 在宿主机写入数据，查看
 
 ```
-<span></span><code>[root@docker01 ~]<span># echo <span>"http://www.nmtui.com"</span> &gt;/data/index.html</span><br>[root@docker01 ~]<span># curl 10.0.0.100</span><br>http:<span>//www.nmtui.com</span><br></code>
+[root@docker01 ~]# echo "http://www.nmtui.com" &gt;/data/index.html
+[root@docker01 ~]# curl 10.0.0.100http://www.nmtui.com
 ```
 
 设置共享卷，使用同一个卷启动一个新的容器
 
 ```
-<span></span><code>[root@docker01 ~]<span># docker run -d -p 8080:80 -v /data:/usr/share/nginx/html nginx:latest </span><br><span>351f</span>0bd78d273604bd0971b186979aa0f3cbf45247274493d2490527babb4e42<br>[root@docker01 ~]<span># curl 10.0.0.100:8080</span><br>http:<span>//www.nmtui.com</span><br></code>
+[root@docker01 ~]# docker run -d -p 8080:80 -v /data:/usr/share/nginx/html nginx:latest 
+351f0bd78d273604bd0971b186979aa0f3cbf45247274493d2490527babb4e42
+[root@docker01 ~]# curl 10.0.0.100:8080
+http://www.nmtui.com
 ```
 
 查看卷列表
 
 ```
-<span></span><code>[root@docker01 ~]<span># docker volume ls</span><br>DRIVER              VOLUME NAME<br></code>
+[root@docker01 ~]# docker volume ls
+DRIVER              VOLUME NAME
 ```
 
 ### 6.2 创建卷后挂载
@@ -1046,37 +1051,59 @@ root         43     29  0 15:32 pts/1    00:00:00 ps -ef
 创建一个卷
 
 ```
-<span></span><code>[root@docker01 ~]<span># docker volume create </span><br>f3b95f7bd17da220e63d4e70850b8d7fb3e20f8ad02043423a39fdd072b83521<br>[root@docker01 ~]<span># docker volume ls </span><br>DRIVER              VOLUME NAME<br>local               f3b95f7bd17da220e63d4e70850b8d7fb3e20f8ad02043423a39fdd072b83521<br></code>
+[root@docker01 ~]# docker volume create 
+f3b95f7bd17da220e63d4e70850b8d7fb3e20f8ad02043423a39fdd072b83521
+[root@docker01 ~]# docker volume ls 
+DRIVER              VOLUME NAMElocal               
+f3b95f7bd17da220e63d4e70850b8d7fb3e20f8ad02043423a39fdd072b83521
 ```
 
 指定卷名
 
 ```
-<span></span><code>[root@docker01 ~]<span># docker volume ls </span><br>DRIVER              VOLUME NAME<br>local               clsn<br>local               f3b95f7bd17da220e63d4e70850b8d7fb3e20f8ad02043423a39fdd072b83521<br></code>
+[root@docker01 ~]# docker volume ls 
+DRIVER              VOLUME 
+NAMElocal               clsnlocal               
+f3b95f7bd17da220e63d4e70850b8d7fb3e20f8ad02043423a39fdd072b83521
 ```
 
 查看卷路径
 
 ```
-<span></span><code>[root@docker01 ~]<span># docker volume inspect clsn </span><br>[<br>    {<br>        <span>"CreatedAt"</span>: <span>"2018-02-01T00:39:25+08:00"</span>,<br>        <span>"Driver"</span>: <span>"local"</span>,<br>        <span>"Labels"</span>: {},<br>        <span>"Mountpoint"</span>: <span>"/var/lib/docker/volumes/clsn/_data"</span>,<br>        <span>"Name"</span>: <span>"clsn"</span>,<br>        <span>"Options"</span>: {},<br>        <span>"Scope"</span>: <span>"local"</span><br>    }<br>]<br></code>
+[root@docker01 ~]# docker volume inspect 
+clsn [    {        "CreatedAt": "2018-02-01T00:39:25+08:00",        "Driver": "local",        "Labels": {},        "Mountpoint": "/var/lib/docker/volumes/clsn/_data",        "Name": "clsn",        "Options": {},        "Scope": "local"    }]
 ```
 
 使用卷创建
 
 ```
-<span></span><code>[root@docker01 ~]<span># docker run -d -p 9000:80 -v clsn:/usr/share/nginx/html nginx:latest </span><br><span>1434559</span>cff996162da7ce71820ed8f5937fb7c02113bbc84e965845c219d3503<br># 宿主机测试<br>[root@docker01 ~]<span># echo <span>'blog.nmtui.com'</span> &gt;/var/lib/docker/volumes/clsn/_data/index.html </span><br>[root@docker01 ~]<span># curl 10.0.0.100:9000</span><br>blog.nmtui.com<br></code>
+[root@docker01 ~]# docker run -d -p 9000:80 -v clsn:/usr/share/nginx/html nginx:latest 1434559cff996162da7ce71820ed8f5937fb7c02113bbc84e965845c219d3503# 宿主机测试
+[root@docker01 ~]# echo 'blog.nmtui.com' &gt;/var/lib/docker/volumes/clsn/_data/index.html 
+[root@docker01 ~]# curl 10.0.0.100:9000 blog.nmtui.com
 ```
 
 设置卷
 
 ```
-<span></span><code>[root@docker01 ~]<span># docker run  -d  -P  --volumes-from 079786c1e297 nginx:latest </span><br>b54b9c9930b417ab3257c6e4a8280b54fae57043c0b76b9dc60b4788e92369fb<br></code>
+[root@docker01 ~]# docker run  -d  -P  --volumes-from 079786c1e297 nginx:latest 
+b54b9c9930b417ab3257c6e4a8280b54fae57043c0b76b9dc60b4788e92369fb
 ```
 
 查看使用的端口
 
 ```
-<span></span><code>[root@docker01 ~]<span># netstat -lntup </span><br><span>Active Internet <span>connections</span> <span>(only servers)</span><br>Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name    <br>tcp        0      0 0.0.0.0:22              0.0.0.0:*               LISTEN      1400/sshd           <br>tcp        0      0 10.0.0.100:2375         0.0.0.0:*               LISTEN      26218/dockerd       <br>tcp6       0      0 :::9000                 :::*                    LISTEN      32015/docker-proxy  <br>tcp6       0      0 :::8080                 :::*                    LISTEN      31853/docker-proxy  <br>tcp6       0      0 :::80                   :::*                    LISTEN      31752/docker-proxy  <br>tcp6       0      0 :::22                   :::*                    LISTEN      1400/sshd           <br>tcp6       0      0 :::32769                :::*                    LISTEN      32300/docker-proxy  <br>[root@docker01 ~]<span># curl 10.0.0.100:32769</span><br>http:<span>//www.nmtui.com</span><br></span></code>
+[root@docker01 ~]# netstat -lntup 
+Active Internet connections (only servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name    
+tcp        0      0 0.0.0.0:22              0.0.0.0:*               LISTEN      1400/sshd           
+tcp        0      0 10.0.0.100:2375         0.0.0.0:*               LISTEN      26218/dockerd       
+tcp6       0      0 :::9000                 :::*                    LISTEN      32015/docker-proxy  
+tcp6       0      0 :::8080                 :::*                    LISTEN      31853/docker-proxy  
+tcp6       0      0 :::80                   :::*                    LISTEN      31752/docker-proxy  
+tcp6       0      0 :::22                   :::*                    LISTEN      1400/sshd           
+tcp6       0      0 :::32769                :::*                    LISTEN      32300/docker-proxy  
+[root@docker01 ~]# curl 10.0.0.100:32769
+http://www.nmtui.com
 ```
 
 ### 6.3 手动将容器保存为镜像
@@ -1088,7 +1115,7 @@ root         43     29  0 15:32 pts/1    00:00:00 ps -ef
 启动一个centos6.8的镜像
 
 ```
-<span></span><code>[root@docker01 ~]<span># docker pull  centos:6.8</span><br>[root@docker01 ~]<span># docker run -it -p 1022:22 centos:6.8  /bin/bash</span><br># 在容器种安装sshd服务，并修改系统密码<br>[root@<span>582051b</span>2b92b ~]<span># yum install  openssh-server -y </span><br>[root@<span>582051b</span>2b92b ~]<span># echo <span>"root:123456"</span> |chpasswd</span><br>[root@<span>582051b</span>2b92b ~]#  /etc/init.d/sshd start<br></code>
+[root@docker01 ~]# docker pull  centos:6.8[root@docker01 ~]# docker run -it -p 1022:22 centos:6.8  /bin/bash# 在容器种安装sshd服务，并修改系统密码[root@582051b2b92b ~]# yum install  openssh-server -y [root@582051b2b92b ~]# echo "root:123456" |chpasswd[root@582051b2b92b ~]#  /etc/init.d/sshd start
 ```
 
 启动完成后镜像ssh连接测试
@@ -1096,25 +1123,25 @@ root         43     29  0 15:32 pts/1    00:00:00 ps -ef
 将容器提交为镜像
 
 ```
-<span></span><code>[root@docker01 ~]<span># docker commit brave_mcclintock  centos6-ssh</span><br></code>
+[root@docker01 ~]# docker commit brave_mcclintock  centos6-ssh
 ```
 
 使用新的镜像启动容器
 
 ```
-<span></span><code>[root@docker01 ~]<span># docker run -d  -p 1122:22  centos6-ssh:latest  /usr/sbin/sshd -D </span><br><span>5b</span>8161fda2a9f2c39c196c67e2eb9274977e7723fe51c4f08a0190217ae93094<br></code>
+[root@docker01 ~]# docker run -d  -p 1122:22  centos6-ssh:latest  /usr/sbin/sshd -D 5b8161fda2a9f2c39c196c67e2eb9274977e7723fe51c4f08a0190217ae93094
 ```
 
 在容器安装httpd服务
 
 ```
-<span></span><code>[root@<span>5b</span>8161fda2a9 /]<span>#  yum install httpd -y</span><br></code>
+[root@5b8161fda2a9 /]#  yum install httpd -y
 ```
 
 编写启动脚本脚本
 
 ```
-<span></span><code>[root@<span>5b</span>8161fda2a9 /]<span># cat  init.sh </span><br>#!/bin/bash <br>/etc/init.d/httpd start <br>/usr/sbin/sshd -D<br>[root@<span>5b</span>8161fda2a9 /]<span># chmod +x init.sh </span><br># 注意执行权限<br></code>
+[root@5b8161fda2a9 /]# cat  init.sh #!/bin/bash /etc/init.d/httpd start /usr/sbin/sshd -D[root@5b8161fda2a9 /]# chmod +x init.sh # 注意执行权限
 ```
 
 ## 注意执行权限
@@ -1122,13 +1149,13 @@ root         43     29  0 15:32 pts/1    00:00:00 ps -ef
 再次提交为新的镜像
 
 ```
-[root@docker01 ~]<span># docker commit  5b8161fda2a9 centos6-httpd </span><br>sha256:<span>705</span>d67a786cac040800b8485cf046fd57b1828b805c515377fc3e9cea3a481c1<br>
+[root@docker01 ~]# docker commit  5b8161fda2a9 centos6-httpd sha256:705d67a786cac040800b8485cf046fd57b1828b805c515377fc3e9cea3a481c1
 ```
 
 启动镜像，做好端口映射。并在浏览器中测试访问
 
 ```
-<span></span><code>[root@docker01 ~]<span># docker run -d -p 1222:22 -p 80:80  centos6-httpd /init.sh </span><br><span>46f</span>a6a06644e31701dc019fb3a8c3b6ef008d4c2c10d46662a97664f838d8c2c<br></code>
+[root@docker01 ~]# docker run -d -p 1222:22 -p 80:80  centos6-httpd /init.sh 46fa6a06644e31701dc019fb3a8c3b6ef008d4c2c10d46662a97664f838d8c2c
 ```
 
 ## 7 Dockerfile自动构建docker镜像
@@ -1140,19 +1167,19 @@ root         43     29  0 15:32 pts/1    00:00:00 ps -ef
 dockerfile主要组成部分：
 
 > ```
-> 基础镜像信息 FROM centos:6.8<br><br> 制作镜像操作指令RUN yum insatll openssh-server \-y<br><br> 容器启动时执行指令 CMD \["/bin/bash"\]
+> 基础镜像信息 FROM centos:6.8 制作镜像操作指令RUN yum insatll openssh-server \-y 容器启动时执行指令 CMD \["/bin/bash"\]
 > ```
 
 dockerfile常用指令：
 
 > ```
-> FROM 这个镜像的妈妈是谁？（指定基础镜像）<br><br> MAINTAINER 告诉别人，谁负责养它？（指定维护者信息，可以没有）<br><br> RUN 你想让它干啥（在命令前面加上RUN即可）<br><br> ADD 给它点创业资金（COPY文件，会自动解压）<br><br> WORKDIR 我是cd,今天刚化了妆（设置当前工作目录）<br><br> VOLUME 给它一个存放行李的地方（设置卷，挂载主机目录）<br><br> EXPOSE 它要打开的门是啥（指定对外的端口）<br><br> CMD 奔跑吧，兄弟！（指定容器启动后的要干的事情）
+> FROM 这个镜像的妈妈是谁？（指定基础镜像） MAINTAINER 告诉别人，谁负责养它？（指定维护者信息，可以没有） RUN 你想让它干啥（在命令前面加上RUN即可） ADD 给它点创业资金（COPY文件，会自动解压） WORKDIR 我是cd,今天刚化了妆（设置当前工作目录） VOLUME 给它一个存放行李的地方（设置卷，挂载主机目录） EXPOSE 它要打开的门是啥（指定对外的端口） CMD 奔跑吧，兄弟！（指定容器启动后的要干的事情）
 > ```
 
 dockerfile其他指令：
 
 > ```
-> COPY 复制文件<br><br>ENV  环境变量<br><br>ENTRYPOINT  容器启动后执行的命令
+> COPY 复制文件ENV  环境变量ENTRYPOINT  容器启动后执行的命令
 > ```
 
 ### 7.2 创建一个Dockerfile
@@ -1160,19 +1187,19 @@ dockerfile其他指令：
 创建第一个Dockerfile文件
 
 ```
-<span></span><code># 创建目录<br>[root@docker01 base]<span># cd /opt/base</span><br># 创建Dcokerfile文件，注意大小写<br>[root@docker01 base]<span># vim Dockerfile</span><br>FROM centos:<span>6.8</span><br>RUN yum install openssh-server -y <br>RUN echo <span>"root:123456"</span> |chpasswd<br>RUN /etc/init.d/sshd start <br>CMD [<span>"/usr/sbin/sshd"</span>,<span>"-D"</span>]<br></code>
+# 创建目录[root@docker01 base]# cd /opt/base# 创建Dcokerfile文件，注意大小写[root@docker01 base]# vim DockerfileFROM centos:6.8RUN yum install openssh-server -y RUN echo "root:123456" |chpasswdRUN /etc/init.d/sshd start CMD ["/usr/sbin/sshd","-D"]
 ```
 
 构建docker镜像
 
 ```
-<span></span><code>[root@docker01 base]<span># docker image build  -t centos6.8-ssh . </span><br>-t 为镜像标签打标签  . 表示当前路径<br></code>
+[root@docker01 base]# docker image build  -t centos6.8-ssh . -t 为镜像标签打标签  . 表示当前路径
 ```
 
 使用自构建的镜像启动
 
 ```
-<span></span><code>[root@docker01 base]<span># docker run  -d -p 2022:22 centos6.8-ssh-b </span><br>dc3027d3c15dac881e8e2aeff80724216f3ac725f142daa66484f7cb5d074e7a<br></code>
+[root@docker01 base]# docker run  -d -p 2022:22 centos6.8-ssh-b dc3027d3c15dac881e8e2aeff80724216f3ac725f142daa66484f7cb5d074e7a
 ```
 
 ### 7.3 使用Dcokerfile安装kodexplorer
@@ -1180,7 +1207,7 @@ dockerfile其他指令：
 Dockerfile文件内容
 
 ```
-<span></span><code>FROM centos:<span>6.8</span><br>RUN yum install wget unzip php php-gd php-mbstring -y &amp;&amp; yum clean all<br># 设置工作目录，之后的操作都在这个目录中<br>WORKDIR /var/www/html/<br>RUN wget -c http:<span>//static.kodcloud.com/update/download/kodexplorer4.25.zip</span><br>RUN unzip kodexplorer4<span>.25</span>.zip &amp;&amp; rm -f kodexplorer4<span>.25</span>.zip<br>RUN chown -R apache.apache .<br>CMD [<span>"/usr/sbin/apachectl"</span>,<span>"-D"</span>,<span>"FOREGROUND"</span>]<br></code>
+FROM centos:6.8RUN yum install wget unzip php php-gd php-mbstring -y &amp;&amp; yum clean all# 设置工作目录，之后的操作都在这个目录中WORKDIR /var/www/html/RUN wget -c http://static.kodcloud.com/update/download/kodexplorer4.25.zipRUN unzip kodexplorer4.25.zip &amp;&amp; rm -f kodexplorer4.25.zipRUN chown -R apache.apache .CMD ["/usr/sbin/apachectl","-D","FOREGROUND"]
 ```
 
 更多的Dockerfile可以参考官方方法。
@@ -1230,13 +1257,13 @@ Docker 支持通过扩展现有镜像，创建新的镜像。实际上，Docker 
 在运行zabbix之前务必要了解容器间互联的方法
 
 ```
-<span></span><code># 创建一个nginx容器<br>docker run -d -p <span>80</span>:<span>80</span> nginx<br># 创建容器，做link，并进入容器中<br>docker run -it --link quirky_brown:web01 centos-ssh /bin/bash<br># 在容器中访问nginx容器可以ping通<br>ping web01<br></code>
+# 创建一个nginx容器docker run -d -p 80:80 nginx# 创建容器，做link，并进入容器中docker run -it --link quirky_brown:web01 centos-ssh /bin/bash# 在容器中访问nginx容器可以ping通ping web01
 ```
 
 命令执行过程
 
 ```
-# 启动apache容器<br>[root@docker01 ~]<span># docker run -d httpd:2.4  </span><br><span>3f</span>1f7fc554720424327286bd2b04aeab1b084a3fb011a785b0deab6a34e56955<br>^[[A[root@docker01 docker ps -a<br>CONTAINER ID        IMAGE               COMMAND              CREATED             STATUS              PORTS               NAMES<br><span>3f</span>1f7fc55472        httpd:<span>2.4</span><span>"httpd-foreground"</span><span>6</span> seconds ago       Up <span>5</span> seconds        <span>80</span>/tcp              determined_clarke<br># 拉取一个busybox 镜像<br>[root@docker01 ~]<span># docker pull busybox </span><br># 启动容器<br>[root@docker01 ~]<span># docker run -it  --link determined_clarke:web busybox:latest   /bin/sh </span><br>/ # <br># 使用新的容器访问最初的web容器<br>/ <span># ping web </span><br><span>PING <span>web</span> <span>(<span>172.17</span><span>.0</span><span>.2</span>)</span>: 56 data bytes<br>64 bytes from 172.17.0.2: seq</span>=<span>0</span> ttl=<span>64</span> time=<span>0.058</span> ms<br>^C<br>--- web ping statistics ---<br><span>1</span> packets transmitted, <span>1</span> packets received, <span>0</span>% packet loss<br>round-trip min/avg/max = <span>0.058</span>/<span>0.058</span>/<span>0.058</span> ms<br>
+# 启动apache容器[root@docker01 ~]# docker run -d httpd:2.4  3f1f7fc554720424327286bd2b04aeab1b084a3fb011a785b0deab6a34e56955^[[A[root@docker01 docker ps -aCONTAINER ID        IMAGE               COMMAND              CREATED             STATUS              PORTS               NAMES3f1f7fc55472        httpd:2.4"httpd-foreground"6 seconds ago       Up 5 seconds        80/tcp              determined_clarke# 拉取一个busybox 镜像[root@docker01 ~]# docker pull busybox # 启动容器[root@docker01 ~]# docker run -it  --link determined_clarke:web busybox:latest   /bin/sh / # # 使用新的容器访问最初的web容器/ # ping web PING web (172.17.0.2): 56 data bytes64 bytes from 172.17.0.2: seq=0 ttl=64 time=0.058 ms^C--- web ping statistics ---1 packets transmitted, 1 packets received, 0% packet lossround-trip min/avg/max = 0.058/0.058/0.058 ms
 ```
 
 ### 9.2 启动zabbix容器
@@ -1244,25 +1271,25 @@ Docker 支持通过扩展现有镜像，创建新的镜像。实际上，Docker 
 1、启动一个mysql的容器
 
 ```
-<span></span><code>docker run --name mysql-server -t \<br>      -e MYSQL_DATABASE=<span>"zabbix"</span> \<br>      -e MYSQL_USER=<span>"zabbix"</span> \<br>      -e MYSQL_PASSWORD=<span>"zabbix_pwd"</span> \<br>      -e MYSQL_ROOT_PASSWORD=<span>"root_pwd"</span> \<br>      -d mysql:<span>5.7</span> \<br>      --character-<span>set</span>-server=utf8 --collation-server=utf8_bin<br></code>
+docker run --name mysql-server -t \      -e MYSQL_DATABASE="zabbix" \      -e MYSQL_USER="zabbix" \      -e MYSQL_PASSWORD="zabbix_pwd" \      -e MYSQL_ROOT_PASSWORD="root_pwd" \      -d mysql:5.7 \      --character-set-server=utf8 --collation-server=utf8_bin
 ```
 
 2、启动java-gateway容器监控java服务
 
 ```
-<span></span><code>docker run --name zabbix-java-gateway -t \<br>      -d zabbix/zabbix-java-gateway:latest<br></code>
+docker run --name zabbix-java-gateway -t \      -d zabbix/zabbix-java-gateway:latest
 ```
 
 3、启动zabbix-mysql容器使用link连接mysql与java-gateway。
 
 ```
-<span></span><code>docker run --name zabbix-server-mysql -t \<br>      -e DB_SERVER_HOST=<span>"mysql-server"</span> \<br>      -e MYSQL_DATABASE=<span>"zabbix"</span> \<br>      -e MYSQL_USER=<span>"zabbix"</span> \<br>      -e MYSQL_PASSWORD=<span>"zabbix_pwd"</span> \<br>      -e MYSQL_ROOT_PASSWORD=<span>"root_pwd"</span> \<br>      -e ZBX_JAVAGATEWAY=<span>"zabbix-java-gateway"</span> \<br>      --link mysql-server:mysql \<br>      --link zabbix-java-gateway:zabbix-java-gateway \<br>      -p <span>10051</span>:<span>10051</span> \<br>      -d zabbix/zabbix-server-mysql:latest<br></code>
+docker run --name zabbix-server-mysql -t \      -e DB_SERVER_HOST="mysql-server" \      -e MYSQL_DATABASE="zabbix" \      -e MYSQL_USER="zabbix" \      -e MYSQL_PASSWORD="zabbix_pwd" \      -e MYSQL_ROOT_PASSWORD="root_pwd" \      -e ZBX_JAVAGATEWAY="zabbix-java-gateway" \      --link mysql-server:mysql \      --link zabbix-java-gateway:zabbix-java-gateway \      -p 10051:10051 \      -d zabbix/zabbix-server-mysql:latest
 ```
 
 4、启动zabbix web显示，使用link连接zabbix-mysql与mysql。
 
 ```
-<span></span><code>docker run --name zabbix-web-nginx-mysql -t \<br>      -e DB_SERVER_HOST=<span>"mysql-server"</span> \<br>      -e MYSQL_DATABASE=<span>"zabbix"</span> \<br>      -e MYSQL_USER=<span>"zabbix"</span> \<br>      -e MYSQL_PASSWORD=<span>"zabbix_pwd"</span> \<br>      -e MYSQL_ROOT_PASSWORD=<span>"root_pwd"</span> \<br>      --link mysql-server:mysql \<br>      --link zabbix-server-mysql:zabbix-server \<br>      -p <span>80</span>:<span>80</span> \<br>      -d zabbix/zabbix-web-nginx-mysql:latest<br></code>
+docker run --name zabbix-web-nginx-mysql -t \      -e DB_SERVER_HOST="mysql-server" \      -e MYSQL_DATABASE="zabbix" \      -e MYSQL_USER="zabbix" \      -e MYSQL_PASSWORD="zabbix_pwd" \      -e MYSQL_ROOT_PASSWORD="root_pwd" \      --link mysql-server:mysql \      --link zabbix-server-mysql:zabbix-server \      -p 80:80 \      -d zabbix/zabbix-web-nginx-mysql:latest
 ```
 
 ### 9.3 关于zabbix API
@@ -1272,7 +1299,7 @@ Docker 支持通过扩展现有镜像，创建新的镜像。实际上，Docker 
 获取token方法
 
 ```
-<span></span><code># 获取token<br>[root@docker02 ~]<span># curl -s -X POST -H <span>'Content-Type:application/json'</span> -d '</span><br>{<br><span>"jsonrpc"</span>: <span>"2.0"</span>,<br><span>"method"</span>: <span>"user.login"</span>,<br><span>"params"</span>: {<br><span>"user"</span>: <span>"Admin"</span>,<br><span>"password"</span>: <span>"zabbix"</span><br>},<br><span>"id"</span>: <span>1</span><br>}<span>' http://10.0.0.100/api_jsonrpc.php<br>{"jsonrpc":"2.0","result":"d3be707f9e866ec5d0d1c242292cbebd","id":1}<br></span></code>
+# 获取token[root@docker02 ~]# curl -s -X POST -H 'Content-Type:application/json' -d '{"jsonrpc": "2.0","method": "user.login","params": {"user": "Admin","password": "zabbix"},"id": 1}' http://10.0.0.100/api_jsonrpc.php{"jsonrpc":"2.0","result":"d3be707f9e866ec5d0d1c242292cbebd","id":1}
 ```
 
 ## 10 docker 仓库（registry）
@@ -1282,31 +1309,31 @@ Docker 支持通过扩展现有镜像，创建新的镜像。实际上，Docker 
 1、创建仓库
 
 ```
-<span></span><code>docker run -d -p <span>5000</span>:<span>5000</span> --restart=always --name registry -v /opt/myregistry:/var/lib/registry  registry<br></code>
+docker run -d -p 5000:5000 --restart=always --name registry -v /opt/myregistry:/var/lib/registry  registry
 ```
 
 2、修改配置文件，使之支持http
 
 ```
-<span></span><code>[root@docker01 ~]<span># cat  /etc/docker/daemon.json </span><br>{<br>  <span>"registry-mirrors"</span>: [<span>"https://registry.docker-cn.com"</span>],<br>  <span>"insecure-registries"</span>: [<span>"10.0.0.100:5000"</span>]<br>}<br></code>
+[root@docker01 ~]# cat  /etc/docker/daemon.json {  "registry-mirrors": ["https://registry.docker-cn.com"],  "insecure-registries": ["10.0.0.100:5000"]}
 ```
 
 重启docker让修改生效
 
 ```
-<span></span><code>[root@docker01 ~]<span># systemctl restart  docker.service</span><br></code>
+[root@docker01 ~]# systemctl restart  docker.service
 ```
 
 3、修改镜像标签
 
 ```
-<span></span><code>[root@docker01 ~]<span># docker tag  busybox:latest  10.0.0.100:5000/clsn/busybox:1.0</span><br>[root@docker01 ~]<span># docker images</span><br>REPOSITORY                      TAG                 IMAGE ID            CREATED             SIZE<br>centos6-ssh                     latest              <span>3</span>c2b1e57a0f5        <span>18</span> hours ago        <span>393</span>MB<br>httpd                           <span>2.4</span><span>2e202</span>f453940        <span>6</span> days ago          <span>179</span>MB<br><span>10.0</span><span>.0</span><span>.100</span>:<span>5000</span>/clsn/busybox    <span>1.0</span><span>5b</span>0d59026729        <span>8</span> days ago          <span>1.15</span>MB<br></code>
+[root@docker01 ~]# docker tag  busybox:latest  10.0.0.100:5000/clsn/busybox:1.0[root@docker01 ~]# docker imagesREPOSITORY                      TAG                 IMAGE ID            CREATED             SIZEcentos6-ssh                     latest              3c2b1e57a0f5        18 hours ago        393MBhttpd                           2.42e202f453940        6 days ago          179MB10.0.0.100:5000/clsn/busybox    1.05b0d59026729        8 days ago          1.15MB
 ```
 
 4、将新打标签的镜像上传镜像到仓库
 
 ```
-<span></span><code>[root@docker01 ~]<span># docker push   10.0.0.100:5000/clsn/busybox</span><br></code>
+[root@docker01 ~]# docker push   10.0.0.100:5000/clsn/busybox
 ```
 
 ### 10.2 带basic认证的仓库
@@ -1314,25 +1341,25 @@ Docker 支持通过扩展现有镜像，创建新的镜像。实际上，Docker 
 1、安装加密工具
 
 ```
-<span></span><code>[root@docker01 clsn]<span># yum install httpd-tools  -y</span><br></code>
+[root@docker01 clsn]# yum install httpd-tools  -y
 ```
 
 2、设置认证密码
 
 ```
-<span></span><code>mkdir /opt/registry-var/auth/ -p<br>htpasswd \-Bbn clsn <span>123456</span>  &gt; /opt/registry-var/auth/htpasswd<br></code>
+mkdir /opt/registry-var/auth/ -phtpasswd \-Bbn clsn 123456  &gt; /opt/registry-var/auth/htpasswd
 ```
 
 3、启动容器，在启动时传入认证参数
 
 ```
-<span></span><code>docker run -d -p <span>5000</span>:<span>5000</span> -v /opt/registry-var/auth/:/auth/ -e <span>"REGISTRY_AUTH=htpasswd"</span> -e <span>"REGISTRY_AUTH_HTPASSWD_REALM=Registry Realm"</span> -e REGISTRY_AUTH_HTPASSWD_PATH=/auth/htpasswd registry<br></code>
+docker run -d -p 5000:5000 -v /opt/registry-var/auth/:/auth/ -e "REGISTRY_AUTH=htpasswd" -e "REGISTRY_AUTH_HTPASSWD_REALM=Registry Realm" -e REGISTRY_AUTH_HTPASSWD_PATH=/auth/htpasswd registry
 ```
 
 4、使用验证用户测试
 
 ```
-<span></span><code># 登陆用户<br>[root@docker01 ~]<span># docker login 10.0.0.100:5000 </span><br>Username: clsn  <br>Password: <span>123456</span><br>Login Succeeded<br># 推送镜像到仓库<br>[root@docker01 ~]<span># docker push 10.0.0.100:5000/clsn/busybox </span><br>The push refers to repository [<span>10.0</span><span>.0</span><span>.100</span>:<span>5000</span>/clsn/busybox]<br><span>4f</span>ebd3792a1f: Pushed <br><span>1.0</span>: digest: sha256:<span>4</span>cee1979ba0bf7db9fc5d28fb7b798ca69ae95a47c5fecf46327720df4ff352d size: <span>527</span><br>#认证文件的保存位置<br>[root@docker01 ~]<span># cat .docker/config.json </span><br>{<br>    <span>"auths"</span>: {<br>        <span>"10.0.0.100:5000"</span>: {<br>            <span>"auth"</span>: <span>"Y2xzbjoxMjM0NTY="</span><br>        },<br>        <span>"https://index.docker.io/v1/"</span>: {<br>            <span>"auth"</span>: <span>"Y2xzbjpIenNAMTk5Ng=="</span><br>        }<br>    },<br>    <span>"HttpHeaders"</span>: {<br>        <span>"User-Agent"</span>: <span>"Docker-Client/17.12.0-ce (linux)"</span><br>    }<br>}<br></code>
+# 登陆用户[root@docker01 ~]# docker login 10.0.0.100:5000 Username: clsn  Password: 123456Login Succeeded# 推送镜像到仓库[root@docker01 ~]# docker push 10.0.0.100:5000/clsn/busybox The push refers to repository [10.0.0.100:5000/clsn/busybox]4febd3792a1f: Pushed 1.0: digest: sha256:4cee1979ba0bf7db9fc5d28fb7b798ca69ae95a47c5fecf46327720df4ff352d size: 527#认证文件的保存位置[root@docker01 ~]# cat .docker/config.json {    "auths": {        "10.0.0.100:5000": {            "auth": "Y2xzbjoxMjM0NTY="        },        "https://index.docker.io/v1/": {            "auth": "Y2xzbjpIenNAMTk5Ng=="        }    },    "HttpHeaders": {        "User-Agent": "Docker-Client/17.12.0-ce (linux)"    }}
 ```
 
 至此，一个简单的docker镜像仓库搭建完成
@@ -1344,13 +1371,13 @@ Docker 支持通过扩展现有镜像，创建新的镜像。实际上，Docker 
 安装docker-compose
 
 ```
-<span></span><code># 下载pip软件<br>yum install -y python2-pip<br># 下载 docker-compose<br>pip install docker-compose<br></code>
+# 下载pip软件yum install -y python2-pip# 下载 docker-composepip install docker-compose
 ```
 
 国内开启pip 下载加速：http://mirrors.aliyun.com/help/pypi
 
 ```
-<span></span><code>mkdir ~/.pip/<br>cat &gt; ~/.pip/pip.conf &lt;&lt;<span>'EOF'</span><br>[global]<br>index-url = https:<span>//mirrors.aliyun.com/pypi/simple/</span><br>[install]<br>trusted-host=mirrors.aliyun.com<br>EOF<br></code>
+mkdir ~/.pip/cat &gt; ~/.pip/pip.conf &lt;&lt;'EOF'[global]index-url = https://mirrors.aliyun.com/pypi/simple/[install]trusted-host=mirrors.aliyun.comEOF
 ```
 
 ### 11.2 编排启动镜像
@@ -1358,19 +1385,19 @@ Docker 支持通过扩展现有镜像，创建新的镜像。实际上，Docker 
 1、创建文件目录
 
 ```
-<span></span><code>[root@docker01 ~]<span># mkdir /opt/my_wordpress/</span><br>[root@docker01 ~]<span># cd /opt/my_wordpress/</span><br></code>
+[root@docker01 ~]# mkdir /opt/my_wordpress/[root@docker01 ~]# cd /opt/my_wordpress/
 ```
 
 2、编写编排文件
 
 ```
-<span></span><code>[root@docker01 my_wordpress]<span># vim docker-compose.yml</span><br>version: <span>'3'</span><br>services:<br>   db:<br>     image: mysql:<span>5.7</span><br>     volumes:<br>       - /data/db_data:/var/lib/mysql<br>     restart: always<br>     environment:<br>       MYSQL_ROOT_PASSWORD: somewordpress<br>       MYSQL_DATABASE: wordpress<br>       MYSQL_USER: wordpress<br>       MYSQL_PASSWORD: wordpress<br>   wordpress:<br>     depends_on:<br>       - db<br>     image: wordpress:latest<br>     volumes:<br>       - /data/web_data:/var/www/html<br>     ports: <br>       - <span>"8000:80"</span><br>     restart: always<br>     environment:<br>       WORDPRESS_DB_HOST: db:<span>3306</span><br>       WORDPRESS_DB_USER: wordpress<br>       WORDPRESS_DB_PASSWORD: wordpress<br></code>
+[root@docker01 my_wordpress]# vim docker-compose.ymlversion: '3'services:   db:     image: mysql:5.7     volumes:       - /data/db_data:/var/lib/mysql     restart: always     environment:       MYSQL_ROOT_PASSWORD: somewordpress       MYSQL_DATABASE: wordpress       MYSQL_USER: wordpress       MYSQL_PASSWORD: wordpress   wordpress:     depends_on:       - db     image: wordpress:latest     volumes:       - /data/web_data:/var/www/html     ports:        - "8000:80"     restart: always     environment:       WORDPRESS_DB_HOST: db:3306       WORDPRESS_DB_USER: wordpress       WORDPRESS_DB_PASSWORD: wordpress
 ```
 
 3、启动
 
 ```
-<span></span><code>[root@docker01 my_wordpress]<span># docker-compose up</span><br>　　#启动方法：docker-compose up<br>　　#后台启动方法：docker-compose up -d<br></code>
+[root@docker01 my_wordpress]# docker-compose up　　#启动方法：docker-compose up　　#后台启动方法：docker-compose up -d
 ```
 
 4、浏览器上访问http://10.0.0.100:8000
@@ -1382,19 +1409,19 @@ Docker 支持通过扩展现有镜像，创建新的镜像。实际上，Docker 
 1、修改编排脚本
 
 ```
-<span></span><code>[root@docker01 my_wordpress]<span># cat docker-compose.yml </span><br>version: <span>'3'</span><br>services:<br>   db:<br>     image: mysql:<span>5.7</span><br>     volumes:<br>       - /data/db_data:/var/lib/mysql<br>     restart: always<br>     environment:<br>       MYSQL_ROOT_PASSWORD: somewordpress<br>       MYSQL_DATABASE: wordpress<br>       MYSQL_USER: wordpress<br>       MYSQL_PASSWORD: wordpress<br>   wordpress:<br>     depends_on:<br>       - db<br>     image: wordpress:latest<br>     volumes:<br>       - /data/web_data:/var/www/html<br>     ports: <br>       - <span>"80"</span><br>     restart: always<br>     environment:<br>       WORDPRESS_DB_HOST: db:<span>3306</span><br>       WORDPRESS_DB_USER: wordpress<br>       WORDPRESS_DB_PASSWORD: wordpress<br></code>
+[root@docker01 my_wordpress]# cat docker-compose.yml version: '3'services:   db:     image: mysql:5.7     volumes:       - /data/db_data:/var/lib/mysql     restart: always     environment:       MYSQL_ROOT_PASSWORD: somewordpress       MYSQL_DATABASE: wordpress       MYSQL_USER: wordpress       MYSQL_PASSWORD: wordpress   wordpress:     depends_on:       - db     image: wordpress:latest     volumes:       - /data/web_data:/var/www/html     ports:        - "80"     restart: always     environment:       WORDPRESS_DB_HOST: db:3306       WORDPRESS_DB_USER: wordpress       WORDPRESS_DB_PASSWORD: wordpress
 ```
 
 2、同时启动**两台**wordpress
 
 ```
-<span></span><code>[root@docker01 my_wordpress]<span># docker-compose scale wordpress=2 </span><br>WARNING: The scale command is deprecated. Use the up command with the --scale flag instead.<br>Starting mywordpress_wordpress_1 ... done<br>Creating mywordpress_wordpress_2 ... done<br></code>
+[root@docker01 my_wordpress]# docker-compose scale wordpress=2 WARNING: The scale command is deprecated. Use the up command with the --scale flag instead.Starting mywordpress_wordpress_1 ... doneCreating mywordpress_wordpress_2 ... done
 ```
 
 3、安装haproxy
 
 ```
-<span></span><code>[root@docker01 ~]<span># yum install haproxy -y</span><br></code>
+[root@docker01 ~]# yum install haproxy -y
 ```
 
 4、修改haproxy配置文件
@@ -1402,13 +1429,13 @@ Docker 支持通过扩展现有镜像，创建新的镜像。实际上，Docker 
 关于配置文件的详细说明，参考：https://www.cnblogs.com/MacoLee/p/5853413.html
 
 ```
-<span></span><code>[root@docker01 ~]<span>#cp /etc/haproxy/haproxy.cfg{,.bak}</span><br>[root@docker01 ~]<span># vim /etc/haproxy/haproxy.cfg</span><br>global<br>    <span>log</span><span>127.0</span><span>.0</span><span>.1</span> local2<br>    chroot      /var/lib/haproxy<br>    pidfile     /var/run/haproxy.pid<br>    maxconn     <span>4000</span><br>    user        haproxy<br>    group       haproxy<br>    daemon<br>    stats socket /var/lib/haproxy/stats level admin  #支持命令行控制<br>defaults<br>    mode                    http<br>    <span>log</span>                     global<br>    option                  httplog<br>    option                  dontlognull<br>    option http-server-close<br>    option forwardfor       except <span>127.0</span><span>.0</span><span>.0</span>/<span>8</span><br>    option                  redispatch<br>    retries                 <span>3</span><br>    timeout http-request    <span>10</span>s<br>    timeout <span>queue</span><span>1</span>m<br>    timeout connect         <span>10</span>s<br>    timeout client          <span>1</span>m<br>    timeout server          <span>1</span>m<br>    timeout http-keep-alive <span>10</span>s<br>    timeout check           <span>10</span>s<br>    maxconn                 <span>3000</span><br>listen stats<br>    mode http<br>    bind <span>0.0</span><span>.0</span><span>.0</span>:<span>8888</span><br>    stats enable<br>    stats uri     /haproxy-status <br>    stats auth    admin:<span>123456</span><br>frontend frontend_www_example_com<br>    bind <span>10.0</span><span>.0</span><span>.100</span>:<span>8000</span><br>    mode http<br>    option httplog<br>    <span>log</span> global<br>    default_backend backend_www_example_com<br>backend backend_www_example_com<br>    option forwardfor header X-REAL-IP<br>    option httpchk HEAD / HTTP/<span>1.0</span><br>    balance roundrobin<br>    server web-node1  <span>10.0</span><span>.0</span><span>.100</span>:<span>32768</span> check inter <span>2000</span> rise <span>30</span> fall <span>15</span><br>    server web-node2  <span>10.0</span><span>.0</span><span>.100</span>:<span>32769</span> check inter <span>2000</span> rise <span>30</span> fall <span>15</span><br></code>
+[root@docker01 ~]#cp /etc/haproxy/haproxy.cfg{,.bak}[root@docker01 ~]# vim /etc/haproxy/haproxy.cfgglobal    log127.0.0.1 local2    chroot      /var/lib/haproxy    pidfile     /var/run/haproxy.pid    maxconn     4000    user        haproxy    group       haproxy    daemon    stats socket /var/lib/haproxy/stats level admin  #支持命令行控制defaults    mode                    http    log                     global    option                  httplog    option                  dontlognull    option http-server-close    option forwardfor       except 127.0.0.0/8    option                  redispatch    retries                 3    timeout http-request    10s    timeout queue1m    timeout connect         10s    timeout client          1m    timeout server          1m    timeout http-keep-alive 10s    timeout check           10s    maxconn                 3000listen stats    mode http    bind 0.0.0.0:8888    stats enable    stats uri     /haproxy-status     stats auth    admin:123456frontend frontend_www_example_com    bind 10.0.0.100:8000    mode http    option httplog    log global    default_backend backend_www_example_combackend backend_www_example_com    option forwardfor header X-REAL-IP    option httpchk HEAD / HTTP/1.0    balance roundrobin    server web-node1  10.0.0.100:32768 check inter 2000 rise 30 fall 15    server web-node2  10.0.0.100:32769 check inter 2000 rise 30 fall 15
 ```
 
 5、启动haproxy
 
 ```
-<span></span><code>systemctl start haproxy<br>systemctl enable haproxy<br></code>
+systemctl start haproxysystemctl enable haproxy
 ```
 
 6、使用浏览器访问hapeoxy监听的8000端口可以看到负载的情况
@@ -1426,31 +1453,31 @@ Docker 支持通过扩展现有镜像，创建新的镜像。实际上，Docker 
 1、安装软件
 
 ```
-<span></span><code>yum install socat.x86\_64 -y<br></code>
+yum install socat.x86\_64 -y
 ```
 
 2、查看帮助
 
 ```
-<span></span><code>[root@docker01 web_data]<span># echo <span>"help"</span>|socat stdio /var/lib/haproxy/stats</span><br></code>
+[root@docker01 web_data]# echo "help"|socat stdio /var/lib/haproxy/stats
 ```
 
 3、下线后端节点
 
 ```
-<span></span><code>echo <span>"disable server backend_www_example_com/web-node2"</span>|socat stdio /var/lib/haproxy/stats<br></code>
+echo "disable server backend_www_example_com/web-node2"|socat stdio /var/lib/haproxy/stats
 ```
 
 4、上线后端节点
 
 ```
-<span></span><code>echo <span>"enable server backend_www_example_com/web-node3"</span>|socat stdio /var/lib/haproxy/stats<br></code>
+echo "enable server backend_www_example_com/web-node3"|socat stdio /var/lib/haproxy/stats
 ```
 
 5、编写php测试页，放到/data/web\_data下，在浏览器中访问可以查看当前的节点
 
 ```
-<span></span><code>[root@docker01 web_data]<span># vim check.php</span><br>&lt;html&gt;<br>    &lt;head&gt;<br>        &lt;title&gt;PHP测试&lt;/title&gt;<br>    &lt;/head&gt;<br>    &lt;body&gt;<br>        &lt;?php  echo <span>'&lt;p&gt;Hello World &lt;/p&gt;'</span>; ?&gt;<br>        &lt;?php  echo <span>"访问的服务器地址是:"</span>.<span>"&lt;fontcolor=red&gt;"</span>.$_SERVER[<span>'SERVER_ADDR'</span>].<span>"&lt;/font&gt;"</span>.<span>"&lt;br&gt;"</span>;<br>        echo<span>"访问的服务器域名是:"</span>.<span>"&lt;fontcolor=red&gt;"</span>.$_SERVER[<span>'SERVER_NAME'</span>].<span>"&lt;/font&gt;"</span>.<span>"&lt;br&gt;"</span>;<br>        ?&gt;<br>    &lt;/body&gt;<br>&lt;/html&gt;<br></code>
+[root@docker01 web_data]# vim check.php&lt;html&gt;    &lt;head&gt;        &lt;title&gt;PHP测试&lt;/title&gt;    &lt;/head&gt;    &lt;body&gt;        &lt;?php  echo '&lt;p&gt;Hello World &lt;/p&gt;'; ?&gt;        &lt;?php  echo "访问的服务器地址是:"."&lt;fontcolor=red&gt;".$_SERVER['SERVER_ADDR']."&lt;/font&gt;"."&lt;br&gt;";        echo"访问的服务器域名是:"."&lt;fontcolor=red&gt;".$_SERVER['SERVER_NAME']."&lt;/font&gt;"."&lt;br&gt;";        ?&gt;    &lt;/body&gt;&lt;/html&gt;
 ```
 
 ## 12 重启docker服务，容器全部退出的解决办法
@@ -1458,25 +1485,25 @@ Docker 支持通过扩展现有镜像，创建新的镜像。实际上，Docker 
 ### 12.1 在启动是指定自动重启
 
 ```
-<span></span><code>docker run  --restart=always<br></code>
+docker run  --restart=always
 ```
 
 ### 12.2 修改docker默认配置文件
 
 ```
-<span></span><code># 添加上下面这行<br><span>"live-restore"</span>: <span>true</span><br></code>
+# 添加上下面这行"live-restore": true
 ```
 
 docker server配置文件/etc/docker/daemon.json参考
 
 ```
-<span></span><code>[root@docker02 ~]<span># cat  /etc/docker/daemon.json </span><br>{<br>  <span>"registry-mirrors"</span>: [<span>"https://registry.docker-cn.com"</span>],<br>  <span>"graph"</span>: <span>"/opt/mydocker"</span>, # 修改数据的存放目录到/opt/mydocker/，原/var/lib/docker/<br>  <span>"insecure-registries"</span>: [<span>"10.0.0.100:5000"</span>],<br>  <span>"live-restore"</span>: <span>true</span><br>}<br></code>
+[root@docker02 ~]# cat  /etc/docker/daemon.json {  "registry-mirrors": ["https://registry.docker-cn.com"],  "graph": "/opt/mydocker", # 修改数据的存放目录到/opt/mydocker/，原/var/lib/docker/  "insecure-registries": ["10.0.0.100:5000"],  "live-restore": true}
 ```
 
 重启生效，只对在此之后启动的容器生效
 
 ```
-<span></span><code>[root@docker01 ~]<span># systemctl restart  docker.service</span><br></code>
+[root@docker01 ~]# systemctl restart  docker.service
 ```
 
 ## 13 Docker网络类型
@@ -1494,7 +1521,7 @@ docker server配置文件/etc/docker/daemon.json参考
 此模式下创建容器是不会为容器配置任何网络参数的，如：容器网卡、IP、通信路由等，全部需要自己去配置。
 
 ```
-<span></span><code>[root@docker01 ~]<span># docker run  -it --network none busybox:latest  /bin/sh </span><br>/ <span># ip a</span><br><span>1</span>: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu <span>65536</span> qdisc noqueue <br>    link/loopback <span>00</span>:<span>00</span>:<span>00</span>:<span>00</span>:<span>00</span>:<span>00</span> brd <span>00</span>:<span>00</span>:<span>00</span>:<span>00</span>:<span>00</span>:<span>00</span><br>    inet <span>127.0</span><span>.0</span><span>.1</span>/<span>8</span> scope host lo<br>       valid_lft forever preferred_lft forever<br></code>
+[root@docker01 ~]# docker run  -it --network none busybox:latest  /bin/sh / # ip a1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue     link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00    inet 127.0.0.1/8 scope host lo       valid_lft forever preferred_lft forever
 ```
 
 ### 13.3 与其他容器共享网络配置(Container）
@@ -1502,7 +1529,7 @@ docker server配置文件/etc/docker/daemon.json参考
 此模式和host模式很类似，只是此模式创建容器共享的是其他容器的IP和端口而不是物理机，此模式容器自身是不会配置网络和端口，创建此模式容器进去后，你会发现里边的IP是你所指定的那个容器IP并且端口也是共享的，而且其它还是**互相隔离**的，如进程等。
 
 ```
-<span></span><code>[root@docker01 ~]<span># docker run  -it --network container:mywordpress_db_1  busybox:latest  /bin/sh </span><br>/ <span># ip a</span><br><span>1</span>: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu <span>65536</span> qdisc noqueue <br>    link/loopback <span>00</span>:<span>00</span>:<span>00</span>:<span>00</span>:<span>00</span>:<span>00</span> brd <span>00</span>:<span>00</span>:<span>00</span>:<span>00</span>:<span>00</span>:<span>00</span><br>    inet <span>127.0</span><span>.0</span><span>.1</span>/<span>8</span> scope host lo<br>       valid_lft forever preferred_lft forever<br><span>105</span>: eth0@if106: &lt;BROADCAST,MULTICAST,UP,LOWER_UP,M-DOWN&gt; mtu <span>1500</span> qdisc noqueue <br>    link/ether <span>02</span>:<span>42</span>:ac:<span>12</span>:<span>00</span>:<span>03</span> brd ff:ff:ff:ff:ff:ff<br>    inet <span>172.18</span><span>.0</span><span>.3</span>/<span>16</span> brd <span>172.18</span><span>.255</span><span>.255</span> scope global eth0<br>       valid_lft forever preferred_lft forever<br></code>
+[root@docker01 ~]# docker run  -it --network container:mywordpress_db_1  busybox:latest  /bin/sh / # ip a1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue     link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00    inet 127.0.0.1/8 scope host lo       valid_lft forever preferred_lft forever105: eth0@if106: &lt;BROADCAST,MULTICAST,UP,LOWER_UP,M-DOWN&gt; mtu 1500 qdisc noqueue     link/ether 02:42:ac:12:00:03 brd ff:ff:ff:ff:ff:ff    inet 172.18.0.3/16 brd 172.18.255.255 scope global eth0       valid_lft forever preferred_lft forever
 ```
 
 ### 13.4 使用宿主机网络
@@ -1510,13 +1537,13 @@ docker server配置文件/etc/docker/daemon.json参考
 此模式创建的容器没有自己独立的网络命名空间，是和物理机共享一个Network Namespace，并且共享物理机的所有端口与IP，并且这个模式认为是不安全的。
 
 ```
-<span></span><code>[root@docker01 ~]<span># docker run  -it --network host  busybox:latest  /bin/sh</span><br></code>
+[root@docker01 ~]# docker run  -it --network host  busybox:latest  /bin/sh
 ```
 
 ### 13.5 查看网络列表
 
 ```
-<span></span><code>[root@docker01 ~]<span># docker network list </span><br>NETWORK ID          NAME                  DRIVER              SCOPE<br>b15e8a720d3b        bridge                bridge              local<br><span>345</span>d65b4c2a0        host                  host                local<br>bc5e2a32bb55        mywordpress_default   bridge              local<br>ebf76eea91bb        none                  null                local<br></code>
+[root@docker01 ~]# docker network list NETWORK ID          NAME                  DRIVER              SCOPEb15e8a720d3b        bridge                bridge              local345d65b4c2a0        host                  host                localbc5e2a32bb55        mywordpress_default   bridge              localebf76eea91bb        none                  null                local
 ```
 
 ### 13.6 用PIPEWORK为docker容器配置独立IP
@@ -1530,7 +1557,7 @@ docker server配置文件/etc/docker/daemon.json参考
 **1、安装pipework**
 
 ```
-<span></span><code>wget https:<span>//github.com/jpetazzo/pipework/archive/master.zip</span><br>unzip master.zip <br>cp pipework-master/pipework  /usr/local/bin/<br>chmod +x /usr/local/bin/pipework<br></code>
+wget https://github.com/jpetazzo/pipework/archive/master.zipunzip master.zip cp pipework-master/pipework  /usr/local/bin/chmod +x /usr/local/bin/pipework
 ```
 
 **2、配置桥接网卡**
@@ -1538,43 +1565,43 @@ docker server配置文件/etc/docker/daemon.json参考
 安装桥接工具
 
 ```
-<span></span><code>yum install bridge-utils.x86\_64 -y<br></code>
+yum install bridge-utils.x86\_64 -y
 ```
 
 修改网卡配置，实现桥接
 
 ```
-<span></span><code># 修改eth0配置，让br0实现桥接<br>[root@docker01 ~]<span># cat /etc/sysconfig/network-scripts/ifcfg-eth0 </span><br>TYPE=Ethernet<br>BOOTPROTO=<span>static</span><br>NAME=eth0<br>DEVICE=eth0<br>ONBOOT=yes<br>BRIDGE=br0<br>[root@docker01 ~]# cat /etc/sysconfig/network-scripts/ifcfg-br0 <br>TYPE=Bridge<br>BOOTPROTO=<span>static</span><br>NAME=br0<br>DEVICE=br0<br>ONBOOT=yes<br>IPADDR=<span>10.0</span><span>.0</span><span>.100</span><br>NETMASK=<span>255.255</span><span>.255</span><span>.0</span><br>GATEWAY=<span>10.0</span><span>.0</span><span>.254</span><br>DNS1=<span>223.5</span><span>.5</span><span>.5</span><br># 重启网络<br>[root@docker01 ~]# /etc/init.d/network restart<br></code>
+# 修改eth0配置，让br0实现桥接[root@docker01 ~]# cat /etc/sysconfig/network-scripts/ifcfg-eth0 TYPE=EthernetBOOTPROTO=staticNAME=eth0DEVICE=eth0ONBOOT=yesBRIDGE=br0[root@docker01 ~]# cat /etc/sysconfig/network-scripts/ifcfg-br0 TYPE=BridgeBOOTPROTO=staticNAME=br0DEVICE=br0ONBOOT=yesIPADDR=10.0.0.100NETMASK=255.255.255.0GATEWAY=10.0.0.254DNS1=223.5.5.5# 重启网络[root@docker01 ~]# /etc/init.d/network restart
 ```
 
 **3、运行一个容器镜像测试：**
 
 ```
-<span></span><code>pipework br0 \$\(docker run -d -it -p <span>6880</span>:<span>80</span> --name  httpd\_pw httpd\) <span>10.0</span><span>.0</span><span>.220</span>/<span>24</span>\@<span>10.0</span><span>.0</span><span>.254</span><br></code>
+pipework br0 \$\(docker run -d -it -p 6880:80 --name  httpd\_pw httpd\) 10.0.0.220/24\@10.0.0.254
 ```
 
 在其他主机上测试端口及连通性
 
 ```
-<span></span><code>[root@docker01 ~]<span># curl 10.0.0.220</span><br>&lt;html&gt;&lt;body&gt;&lt;h1&gt;It works!&lt;/h1&gt;&lt;/body&gt;&lt;/html&gt;<br>[root@docker01 ~]<span># ping 10.0.0.220 -c 1</span><br>PING <span>10.0</span><span>.0</span><span>.220</span> (<span>10.0</span><span>.0</span><span>.220</span>) <span>56</span>(<span>84</span>) bytes of data.<br><span>64</span> bytes from <span>10.0</span><span>.0</span><span>.220</span>: icmp_seq=<span>1</span> ttl=<span>64</span> time=<span>0.043</span> ms<br></code>
+[root@docker01 ~]# curl 10.0.0.220&lt;html&gt;&lt;body&gt;&lt;h1&gt;It works!&lt;/h1&gt;&lt;/body&gt;&lt;/html&gt;[root@docker01 ~]# ping 10.0.0.220 -c 1PING 10.0.0.220 (10.0.0.220) 56(84) bytes of data.64 bytes from 10.0.0.220: icmp_seq=1 ttl=64 time=0.043 ms
 ```
 
 **4、再运行一个容器，设置网路类型为none：**
 
 ```
-<span></span><code>pipework br0 $(docker run -d -it --net=none --name test httpd:<span>2.4</span>) <span>10.0</span><span>.0</span><span>.221</span>/<span>24</span>@<span>10.0</span><span>.0</span><span>.254</span><br></code>
+pipework br0 $(docker run -d -it --net=none --name test httpd:2.4) 10.0.0.221/24@10.0.0.254
 ```
 
 进行访问测试
 
 ```
-<span></span><code>[root@docker01 ~]<span># curl 10.0.0.221</span><br>&lt;html&gt;&lt;body&gt;&lt;h1&gt;It works!&lt;/h1&gt;&lt;/body&gt;&lt;/html&gt;<br></code>
+[root@docker01 ~]# curl 10.0.0.221&lt;html&gt;&lt;body&gt;&lt;h1&gt;It works!&lt;/h1&gt;&lt;/body&gt;&lt;/html&gt;
 ```
 
 **5、重启容器后需要再次指定：**
 
 ```
-<span></span><code>pipework br0 testduliip  <span>172.16</span><span>.146</span><span>.113</span>/<span>24</span>\@<span>172.16</span><span>.146</span><span>.1</span> pipework br0 testduliip01 <span>172.16</span><span>.146</span><span>.112</span>/<span>24</span>\@<span>172.16</span><span>.146</span><span>.1</span><br></code>
+pipework br0 testduliip  172.16.146.113/24\@172.16.146.1 pipework br0 testduliip01 172.16.146.112/24\@172.16.146.1
 ```
 
 Dcoker跨主机通信之overlay可以参考：
@@ -1586,19 +1613,19 @@ http://www.cnblogs.com/CloudMan6/p/7270551.html
 创建网络
 
 ```
-<span></span><code>[root@docker01 ~]<span># docker network  create --driver macvlan  --subnet 10.1.0.0/24 --gateway 10.1.0.254 -o parent=eth0  macvlan_1</span><br><span>33</span>a1f41dcc074f91b5bd45e7dfedabfb2b8ec82db16542f05213839a119b62ca<br></code>
+[root@docker01 ~]# docker network  create --driver macvlan  --subnet 10.1.0.0/24 --gateway 10.1.0.254 -o parent=eth0  macvlan_133a1f41dcc074f91b5bd45e7dfedabfb2b8ec82db16542f05213839a119b62ca
 ```
 
 设置网卡为混杂模式
 
 ```
-<span></span><code>ip link <span>set</span> eth0 promisc on<br></code>
+ip link set eth0 promisc on
 ```
 
 创建使用macvlan网络容器
 
 ```
-<span></span><code>[root@docker02 ~]<span># docker run  -it --network macvlan_1  --ip=10.1.0.222 busybox /bin/sh</span><br></code>
+[root@docker02 ~]# docker run  -it --network macvlan_1  --ip=10.1.0.222 busybox /bin/sh
 ```
 
 ## 14 docker企业级镜像仓库harbor
@@ -1606,7 +1633,7 @@ http://www.cnblogs.com/CloudMan6/p/7270551.html
 **容器管理**
 
 ```
-<span></span><code>[root@docker01 harbor]<span># pwd</span><br>/opt/harbor<br>[root@docker01 harbor]<span># docker-compose stop</span><br></code>
+[root@docker01 harbor]# pwd/opt/harbor[root@docker01 harbor]# docker-compose stop
 ```
 
 1、安装docker、docker-compose
@@ -1614,19 +1641,19 @@ http://www.cnblogs.com/CloudMan6/p/7270551.html
 下载 harbor
 
 ```
-<span></span><code>cd /opt &amp;&amp; https:<span>//storage.googleapis.com/harbor-releases/harbor-offline-installer-v1.3.0.tgz</span><br>tar xf harbor-offline-installer-v1<span>.3</span><span>.0</span>.tgz<br></code>
+cd /opt &amp;&amp; https://storage.googleapis.com/harbor-releases/harbor-offline-installer-v1.3.0.tgztar xf harbor-offline-installer-v1.3.0.tgz
 ```
 
 2、修改主机及web界面密码
 
 ```
-<span></span><code>[root@docker01 harbor]<span># vim harbor.cfg </span><br>    ···<br>    hostname = <span>10.0</span><span>.0</span><span>.100</span><br>    harbor_admin_password = Harbor12345<br>    ···<br></code>
+[root@docker01 harbor]# vim harbor.cfg     ···    hostname = 10.0.0.100    harbor_admin_password = Harbor12345    ···
 ```
 
 3、执行安装脚本
 
 ```
-<span></span><code>[root@docker01 harbor]# ./install.sh<br></code>
+[root@docker01 harbor]# ./install.sh
 ```
 
 浏览器访问 http://10.0.0.11
@@ -1640,13 +1667,13 @@ http://www.cnblogs.com/CloudMan6/p/7270551.html
 4、镜像推送到仓库的指定项目
 
 ```
-<span></span><code>[root@docker02 ~]<span># docker  tag centos:6.8  10.0.0.100/clsn/centos6.8:1.0</span><br>[root@docker02 ~]#  <br>[root@docker02 ~]<span># docker images </span><br>REPOSITORY                  TAG                 IMAGE ID            CREATED             SIZE<br>busybox                     latest              <span>5b</span>0d59026729        <span>8</span> days ago          <span>1.15</span>MB<br><span>10.0</span><span>.0</span><span>.100</span>/clsn/centos6<span>.8</span><span>1.0</span><span>6704</span>d778b3ba        <span>2</span> months ago        <span>195</span>MB<br>centos                      <span>6.8</span><span>6704</span>d778b3ba        <span>2</span> months ago        <span>195</span>MB<br>[root@docker02 ~]<span># docker login 10.0.0.100</span><br>Username: admin<br>Password: <br>Login Succeeded<br></code>
+[root@docker02 ~]# docker  tag centos:6.8  10.0.0.100/clsn/centos6.8:1.0[root@docker02 ~]#  [root@docker02 ~]# docker images REPOSITORY                  TAG                 IMAGE ID            CREATED             SIZEbusybox                     latest              5b0d59026729        8 days ago          1.15MB10.0.0.100/clsn/centos6.81.06704d778b3ba        2 months ago        195MBcentos                      6.86704d778b3ba        2 months ago        195MB[root@docker02 ~]# docker login 10.0.0.100Username: adminPassword: Login Succeeded
 ```
 
 5、推送镜像
 
 ```
-<span></span><code>[root@docker02 ~]<span># docker push 10.0.0.100/clsn/centos6.8 </span><br>The push refers to repository [<span>10.0</span><span>.0</span><span>.100</span>/clsn/centos6<span>.8</span>]<br>e00c9229b481: Pushing  <span>13.53</span>MB/<span>194.5</span>MB<br></code>
+[root@docker02 ~]# docker push 10.0.0.100/clsn/centos6.8 The push refers to repository [10.0.0.100/clsn/centos6.8]e00c9229b481: Pushing  13.53MB/194.5MB
 ```
 
 6、在web界面里查看
@@ -1697,5 +1724,5 @@ http://www.cnblogs.com/CloudMan6/p/7270551.html
 \[5\] https://www.cnblogs.com/CloudMan6/p/6806193.html
 
 ```
-<section mpa-from-tpl="t"><strong mpa-from-tpl="t">下载1：OpenCV-Contrib扩展模块中文版教程</strong><br></section><section mpa-from-tpl="t"><span>在「<strong mpa-from-tpl="t"><span>小白学视觉</span></strong>」公众号后台回复：</span><strong mpa-from-tpl="t"><span>扩展模块中文教程</span></strong><span><strong mpa-from-tpl="t">，</strong>即可下载全网第一份OpenCV扩展模块教程中文版，涵盖<strong mpa-from-tpl="t">扩展模块安装、SFM算法、立体视觉、目标跟踪、生物视觉、超分辨率处理</strong>等二十多章内容。</span></section><section mpa-from-tpl="t"><strong mpa-from-tpl="t">下载2：Python视觉实战项目52讲</strong></section><section mpa-from-tpl="t"><span>在<span>「<strong mpa-from-tpl="t"><span>小白学视觉</span></strong>」</span>公众号后台回复：<span><strong mpa-from-tpl="t"><span>Python视觉实战项目</span></strong></span><strong mpa-from-tpl="t">，</strong><span>即可下载包括<strong mpa-from-tpl="t">图像分割、口罩检测、车道线检测、车辆计数、添加眼线、车牌识别、字符识别、情绪检测、文本内容提取、面部识别</strong>等31个视觉实战项目，助力快速学校计算机视觉。</span></span></section><section mpa-from-tpl="t"><strong mpa-from-tpl="t">下载3：OpenCV实战项目20讲</strong></section><section mpa-from-tpl="t"><span><span>在<span>「<strong mpa-from-tpl="t"><span>小白学视觉</span></strong>」</span>公众号后台回复：<strong mpa-from-tpl="t"><span>OpenCV实战项目20讲</span></strong></span><strong mpa-from-tpl="t">，</strong><span>即可下载含有<strong mpa-from-tpl="t">20</strong>个基于<strong mpa-from-tpl="t">OpenCV</strong>实现20个<strong mpa-from-tpl="t">实战项目</strong>，实现OpenCV学习进阶。</span></span></section><section mpa-from-tpl="t"><br></section><p><span>交流群</span><br></p><p><span>欢迎加入公众号读者群一起和同行交流，目前有<span>SLAM<span>、三维视觉</span>、传感器<span>、<span><span>自动驾驶、</span>计算摄影</span></span></span>、检测、分割、识别、<span>医学影像、GAN<span>、<span>算法竞赛</span></span></span>等微信群（以后会逐渐细分），</span><span>请扫描下面微信号加群，备注：”昵称+学校/公司+研究方向“，例如：”张三&nbsp;+&nbsp;上海交大&nbsp;+&nbsp;视觉SLAM“。<span>请按照格式备注，否则不予通过</span>。添加成功后会根据研究方向邀请进入相关微信群。<strong mpa-from-tpl="t">请勿</strong>在群内发送<span>广告</span>，否则会请出群，谢谢理解~</span></p><p><img data-galleryid="" data-ratio="1" data-s="300,640" data-type="jpeg" data-w="430" data-src="https://mmbiz.qpic.cn/sz_mmbiz_jpg/4AqSEnNUeric5L4iaE0Ev62IMvcQhyKHgGtrLkTO4pa7aMsoWkoT5wOkrHDiaNfPK1tTfTKLpxC8fyVxnjwjV3AuA/640?wx_fmt=jpeg&amp;wxfrom=5&amp;wx_lazy=1&amp;wx_co=1" data-imgfileid="100139027" data-original-style="outline: 0px;visibility: visible !important;width: 133px !important;" data-index="15" src="data:image/svg+xml,%3C%3Fxml version='1.0' encoding='UTF-8'%3F%3E%3Csvg width='1px' height='1px' viewBox='0 0 1 1' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'%3E%3Ctitle%3E%3C/title%3E%3Cg stroke='none' stroke-width='1' fill='none' fill-rule='evenodd' fill-opacity='0'%3E%3Cg transform='translate(-249.000000, -126.000000)' fill='%23FFFFFF'%3E%3Crect x='249' y='126' width='1' height='1'%3E%3C/rect%3E%3C/g%3E%3C/g%3E%3C/svg%3E" _width="133px" crossorigin="anonymous" alt="图片"></p><p><img data-imgfileid="100139028" data-ratio="0.5787671232876712" data-s="300,640" data-src="https://mmbiz.qpic.cn/mmbiz_png/4AqSEnNUer8Co8oDDJzFWWECpytMibasA1TMFTFGku5JPkwhp0ywxsmibkOhmichYM6iah0YrIYSsRn9YFWYXuic5Iw/640?wx_fmt=jpeg&amp;wxfrom=5&amp;wx_lazy=1&amp;wx_co=1" data-type="jpeg" data-w="876" data-original-style="outline: 0px;letter-spacing: 0.544px;visibility: visible !important;width: 677px !important;" data-index="16" src="data:image/svg+xml,%3C%3Fxml version='1.0' encoding='UTF-8'%3F%3E%3Csvg width='1px' height='1px' viewBox='0 0 1 1' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'%3E%3Ctitle%3E%3C/title%3E%3Cg stroke='none' stroke-width='1' fill='none' fill-rule='evenodd' fill-opacity='0'%3E%3Cg transform='translate(-249.000000, -126.000000)' fill='%23FFFFFF'%3E%3Crect x='249' y='126' width='1' height='1'%3E%3C/rect%3E%3C/g%3E%3C/g%3E%3C/svg%3E" _width="677px" crossorigin="anonymous" alt="图片"></p>
+<section mpa-from-tpl="t"><strong mpa-from-tpl="t">下载1：OpenCV-Contrib扩展模块中文版教程</strong></section><section mpa-from-tpl="t">在「<strong mpa-from-tpl="t">小白学视觉</strong>」公众号后台回复：<strong mpa-from-tpl="t">扩展模块中文教程</strong><strong mpa-from-tpl="t">，</strong>即可下载全网第一份OpenCV扩展模块教程中文版，涵盖<strong mpa-from-tpl="t">扩展模块安装、SFM算法、立体视觉、目标跟踪、生物视觉、超分辨率处理</strong>等二十多章内容。</section><section mpa-from-tpl="t"><strong mpa-from-tpl="t">下载2：Python视觉实战项目52讲</strong></section><section mpa-from-tpl="t">在「<strong mpa-from-tpl="t">小白学视觉</strong>」公众号后台回复：<strong mpa-from-tpl="t">Python视觉实战项目</strong><strong mpa-from-tpl="t">，</strong>即可下载包括<strong mpa-from-tpl="t">图像分割、口罩检测、车道线检测、车辆计数、添加眼线、车牌识别、字符识别、情绪检测、文本内容提取、面部识别</strong>等31个视觉实战项目，助力快速学校计算机视觉。</section><section mpa-from-tpl="t"><strong mpa-from-tpl="t">下载3：OpenCV实战项目20讲</strong></section><section mpa-from-tpl="t">在「<strong mpa-from-tpl="t">小白学视觉</strong>」公众号后台回复：<strong mpa-from-tpl="t">OpenCV实战项目20讲</strong><strong mpa-from-tpl="t">，</strong>即可下载含有<strong mpa-from-tpl="t">20</strong>个基于<strong mpa-from-tpl="t">OpenCV</strong>实现20个<strong mpa-from-tpl="t">实战项目</strong>，实现OpenCV学习进阶。</section><section mpa-from-tpl="t"></section><p>交流群</p><p>欢迎加入公众号读者群一起和同行交流，目前有SLAM、三维视觉、传感器、自动驾驶、计算摄影、检测、分割、识别、医学影像、GAN、算法竞赛等微信群（以后会逐渐细分），请扫描下面微信号加群，备注：”昵称+学校/公司+研究方向“，例如：”张三&nbsp;+&nbsp;上海交大&nbsp;+&nbsp;视觉SLAM“。请按照格式备注，否则不予通过。添加成功后会根据研究方向邀请进入相关微信群。<strong mpa-from-tpl="t">请勿</strong>在群内发送广告，否则会请出群，谢谢理解~</p><p><img data-galleryid="" data-ratio="1" data-s="300,640" data-type="jpeg" data-w="430" data-src="https://mmbiz.qpic.cn/sz_mmbiz_jpg/4AqSEnNUeric5L4iaE0Ev62IMvcQhyKHgGtrLkTO4pa7aMsoWkoT5wOkrHDiaNfPK1tTfTKLpxC8fyVxnjwjV3AuA/640?wx_fmt=jpeg&amp;wxfrom=5&amp;wx_lazy=1&amp;wx_co=1" data-imgfileid="100139027" data-original-style="outline: 0px;visibility: visible !important;width: 133px !important;" data-index="15" src="data:image/svg+xml,%3C%3Fxml version='1.0' encoding='UTF-8'%3F%3E%3Csvg width='1px' height='1px' viewBox='0 0 1 1' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'%3E%3Ctitle%3E%3C/title%3E%3Cg stroke='none' stroke-width='1' fill='none' fill-rule='evenodd' fill-opacity='0'%3E%3Cg transform='translate(-249.000000, -126.000000)' fill='%23FFFFFF'%3E%3Crect x='249' y='126' width='1' height='1'%3E%3C/rect%3E%3C/g%3E%3C/g%3E%3C/svg%3E" _width="133px" crossorigin="anonymous" alt="图片"></p><p><img data-imgfileid="100139028" data-ratio="0.5787671232876712" data-s="300,640" data-src="https://mmbiz.qpic.cn/mmbiz_png/4AqSEnNUer8Co8oDDJzFWWECpytMibasA1TMFTFGku5JPkwhp0ywxsmibkOhmichYM6iah0YrIYSsRn9YFWYXuic5Iw/640?wx_fmt=jpeg&amp;wxfrom=5&amp;wx_lazy=1&amp;wx_co=1" data-type="jpeg" data-w="876" data-original-style="outline: 0px;letter-spacing: 0.544px;visibility: visible !important;width: 677px !important;" data-index="16" src="data:image/svg+xml,%3C%3Fxml version='1.0' encoding='UTF-8'%3F%3E%3Csvg width='1px' height='1px' viewBox='0 0 1 1' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'%3E%3Ctitle%3E%3C/title%3E%3Cg stroke='none' stroke-width='1' fill='none' fill-rule='evenodd' fill-opacity='0'%3E%3Cg transform='translate(-249.000000, -126.000000)' fill='%23FFFFFF'%3E%3Crect x='249' y='126' width='1' height='1'%3E%3C/rect%3E%3C/g%3E%3C/g%3E%3C/svg%3E" _width="677px" crossorigin="anonymous" alt="图片"></p>
 ```
